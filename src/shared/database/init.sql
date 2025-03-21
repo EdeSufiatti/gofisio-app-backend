@@ -37,4 +37,9 @@ CREATE TABLE appointments (
     service_id UUID REFERENCES services(id) ON DELETE CASCADE,
     professional_id UUID REFERENCES professionals(user_id) ON DELETE CASCADE,
     client_name VARCHAR(255),
-    client_email VARCHAR(255
+    client_email VARCHAR(255) NOT NULL,
+    client_phone VARCHAR(20),
+    date DATE NOT NULL,
+    start_time TIME NOT NULL,
+    status appointment_status DEFAULT 'pending'
+);
