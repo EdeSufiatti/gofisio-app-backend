@@ -124,3 +124,7 @@ Permita conexões externas na porta `5432` no firewall do Windows, caso necessá
 
 Seu ambiente com **WSL + Docker + PostgreSQL 17** está configurado para desenvolvimento backend, com acesso externo ao banco de dados.
 
+Crie um banco de dados chamado gofisio.
+
+Consulte init.sql para a criação das tabelas na base
+
