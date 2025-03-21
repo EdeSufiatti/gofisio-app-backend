@@ -1,18 +1,20 @@
-import express from "express";
+import { Router } from "express";
+import { UsersService } from "./users.service";
+import { UsersRepository } from "./users.repository";
 import { Database } from "../shared/database";
 import { UsersController } from "./users.controler";
 
-const router = express.Router();
 
-// Instanciando o Controller com a conexão do banco
-const usersController = new UsersController(Database);
+const router = Router();
+const repository = new UsersRepository(Database);
+const service = new UsersService(repository);
+const controller = new UsersController(service);
 
-// Rotas:
-router.post("/users", usersController.createUser);
-router.get("/users", usersController.getAllUsers);
-router.get("/users/:id", usersController.getUserById);
-router.put("/users/:id", usersController.updateUser);
-router.patch("/users/:id", usersController.updateUserPartOf);
-router.delete("/users/:id", usersController.deleteUser);
+router.post("/", (req, res) => controller.createUser(req, res));
+router.get("/", (req, res) => controller.getUsers(req, res));
+router.get("/:id", (req, res) => controller.getUserById(req, res));
+router.patch("/:id", (req, res) => controller.updatePartOfUser(req, res));
+router.put("/:id", (req, res) => controller.updateAllFieldsUser(req, res));
+router.delete("/:id", (req, res) => controller.deleteUser(req, res));
 
 export default router;

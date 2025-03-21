@@ -1,102 +1,124 @@
 import { Request, Response } from "express";
-import { UsersRepository } from "./users.repository";
 import { User } from "../shared/model/users";
+import { UsersService } from "./users.service";
 
 export class UsersController {
-  private usersRepository: UsersRepository;
+  private service: UsersService;
 
-  constructor(database: any) {
-    this.usersRepository = new UsersRepository(database);
+  constructor(service: UsersService) {
+    this.service = service;
   }
 
-  createUser = async (req: Request, res: Response) => {
+  // Criar usuário
+  async createUser(req: Request<{}, {}, User>, res: Response) {
     try {
-      const user: User = req.body;
-      const newUser = await this.usersRepository.create(user);
+      const user = req.body;
+      const newUser = await this.service.createUser(user);
       res.status(201).json(newUser);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error creating user",
-        details: error.message || error,
-      });
+    } catch (error) {
+      console.error("Erro ao criar usuário:", error);
+      res.status(400).json({ error: true, message: error });
     }
-  };
+  }
 
-  getAllUsers = async (req: Request, res: Response) => {
+  // Buscar todos usuários
+  async getUsers(_: Request, res: Response) {
     try {
-      const users = await this.usersRepository.getAll();
-      res.status(200).json(users);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error fetching users",
-        details: error.message || error,
-      });
+      const users = await this.service.getAll();
+      res.status(200).send(users);
+    } catch (error) {
+      console.log("Error - UsersController>getUsers", error);
+      res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
-  getUserById = async (req: Request, res: Response) => {
+  // Buscar usuário por ID
+  async getUserById(req: Request<{ id: string }>, res: Response) {
     try {
-      const id = parseInt(req.params.id);
-      const user = await this.usersRepository.getById(id);
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).send({ error: true, message: "Informe o ID do usuário" });
+        return;
+      }
+      const userId = parseInt(id);
+      if (isNaN(userId)) {
+        res.status(400).send({ error: true, message: "Informe um ID válido" });
+        return;
+      }
+      const user = await this.service.getById(userId);
       if (!user) {
-        return res.status(404).send({ error: "User not found" });
+        res.status(404).send({ error: true, message: "Usuário não encontrado" });
+        return;
       }
-      res.status(200).json(user);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error fetching user",
-        details: error.message || error,
-      });
+      res.status(200).send(user);
+    } catch (error) {
+      console.log("Error - UsersController>getUserById", error);
+      res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
-  updateUser = async (req: Request, res: Response) => {
+  // Atualizar parcialmente usuário (PATCH)
+  async updatePartOfUser(req: Request<{ id: string }, {}, User>, res: Response) {
     try {
-      const id = parseInt(req.params.id);
-      const userUpdates: Partial<User> = req.body;
-      const updatedUser = await this.usersRepository.update(id, userUpdates);
-      if (!updatedUser) {
-        return res.status(404).send({ error: "User not found" });
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).send({ error: true, message: "Informe o ID do usuário" });
+        return;
       }
-      res.status(200).json(updatedUser);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error updating user",
-        details: error.message || error,
-      });
+      const userId = parseInt(id);
+      if (isNaN(userId)) {
+        res.status(400).send({ error: true, message: "Informe um ID válido" });
+        return;
+      }
+      const user = req.body;
+      const updatedUser = await this.service.updatePartOfUser(userId, user);
+      res.status(200).send(updatedUser);
+    } catch (error) {
+      console.log("Error - UsersController>updatePartOfUser", error);
+      res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
-  updateUserPartOf = async (req: Request, res: Response) => {
+  // Atualizar todos campos usuário (PUT)
+  async updateAllFieldsUser(req: Request<{ id: string }, {}, User>, res: Response) {
     try {
-      const id = parseInt(req.params.id);
-      const partialUpdates: Partial<User> = req.body;
-      const updatedUser = await this.usersRepository.updatePartOf(id, partialUpdates);
-      if (!updatedUser) {
-        return res.status(404).send({ error: "User not found" });
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).send({ error: true, message: "Informe o ID do usuário" });
+        return;
       }
-      res.status(200).json(updatedUser);
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error updating user partially",
-        details: error.message || error,
-      });
+      const userId = parseInt(id);
+      if (isNaN(userId)) {
+        res.status(400).send({ error: true, message: "Informe um ID válido" });
+        return;
+      }
+      const user = req.body;
+      const updatedUser = await this.service.updateUser(userId, user);
+      res.status(200).send(updatedUser);
+    } catch (error) {
+      console.log("Error - UsersController>updateAllFieldsUser", error);
+      res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 
-  deleteUser = async (req: Request, res: Response) => {
+  // Deletar usuário
+  async deleteUser(req: Request<{ id: string }>, res: Response) {
     try {
-      const id = parseInt(req.params.id);
-      const deleted = await this.usersRepository.delete(id);
-      if (!deleted) {
-        return res.status(404).send({ error: "User not found" });
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).send({ error: true, message: "Informe o ID do usuário" });
+        return;
       }
-      res.status(200).send({ message: "User deleted successfully" });
-    } catch (error: any) {
-      res.status(500).send({
-        error: "Error deleting user",
-        details: error.message || error,
-      });
+      const userId = parseInt(id);
+      if (isNaN(userId)) {
+        res.status(400).send({ error: true, message: "Informe um ID válido" });
+        return;
+      }
+      await this.service.deleteUser(userId);
+      res.status(204).send();
+    } catch (error) {
+      console.log("Error - UsersController>deleteUser", error);
+      res.status(500).send({ error: true, message: error });
     }
-  };
+  }
 }

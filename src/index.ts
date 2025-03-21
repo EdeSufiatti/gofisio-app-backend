@@ -7,5 +7,5 @@ import { app } from "./app";
   } catch (error) {
     console.log(error);
   }
-  // await app.stop();
+  await app.stop();
 })();

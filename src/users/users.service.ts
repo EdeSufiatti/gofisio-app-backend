@@ -1,41 +1,34 @@
-import { UsersRepository } from "./users.repository";
 import { User } from "../shared/model/users";
+import { UsersRepository } from "./users.repository";
 
 export class UsersService {
-  private usersRepository: UsersRepository;
+  private repository: UsersRepository;
 
-  constructor(database: any) {
-    this.usersRepository = new UsersRepository(database);
+  constructor(repository: UsersRepository) {
+    this.repository = repository;
   }
 
-  // CREATE
-  async createUser(user: User): Promise<User> {
-    // Aqui poderiam estar validações ou regras adicionais
-    return await this.usersRepository.create(user);
+  async createUser(user: User) {
+    return await this.repository.create(user);
   }
 
-  // GET ALL
-  async getAllUsers(): Promise<User[]> {
-    return await this.usersRepository.getAll();
+  async getAll() {
+    return await this.repository.getAll();
   }
 
-  // GET BY ID
-  async getUserById(id: number): Promise<User | null> {
-    return await this.usersRepository.getById(id);
+  async getById(id: number) {
+    return await this.repository.getById(id);
   }
 
-  // UPDATE (full)
-  async updateUser(id: number, userUpdates: Partial<User>): Promise<User | null> {
-    return await this.usersRepository.update(id, userUpdates);
+  async updateUser(id: number, user: User) {
+    await this.repository.update(id, user);
   }
 
-  // UPDATE PARTIAL
-  async updateUserPartOf(id: number, partialUpdates: Partial<User>): Promise<User | null> {
-    return await this.usersRepository.updatePartOf(id, partialUpdates);
+  async updatePartOfUser(id: number, user: User) {
+    await this.repository.updatePartOf(id, user);
   }
 
-  // DELETE
-  async deleteUser(id: number): Promise<boolean> {
-    return await this.usersRepository.delete(id);
+  async deleteUser(id: number) {
+    await this.repository.deleteUser(id);
   }
 }
