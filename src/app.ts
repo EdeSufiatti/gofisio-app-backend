@@ -1,7 +1,27 @@
 import express, { Express, Response } from "express";
 import cors from "cors";
+<<<<<<< HEAD
 
 import { Database } from "./shared/database";
+=======
+import { AlunoRouter } from "./aluno/aluno.router";
+import { Database } from "./shared/database";
+import { InstrutorRouter } from "./instrutor/instrutor.router";
+import { CursoRouter } from "./curso/curso.router";
+import { TurmaRouter } from "./turma/turma.router";
+import { CursoRepository } from "./curso/curso.repository";
+import { CursoService } from "./curso/curso.service";
+import { CursoController } from "./curso/curso.controller";
+import { AlunoRepository } from "./aluno/aluno.repository";
+import { AlunoService } from "./aluno/aluno.service";
+import { AlunoController } from "./aluno/aluno.controller";
+import { InstrutorRepository } from "./instrutor/instrutor.repository";
+import { InstrutorService } from "./instrutor/instrutor.service";
+import { InstrutorController } from "./instrutor/instrutor.controller";
+import { TurmaRepository } from "./turma/turma.repository";
+import { TurmaService } from "./turma/turma.service";
+import { TurmaController } from "./turma/turma.controller";
+>>>>>>> b43d1a9affa2f56a694584a37e22e2b845cb2641
 
 class App {
   private readonly PORT = 3000;
@@ -25,6 +45,7 @@ class App {
       res.send({ status: "OK" });
     });
 
+<<<<<<< HEAD
 
 
 
@@ -33,6 +54,41 @@ class App {
 
     this._app.use("/users", usersRouter.getRouter());
 
+=======
+    // Todas as dependencias do pacote aluno
+    const alunoRepository = new AlunoRepository(this.database);
+    const alunoService = new AlunoService(alunoRepository);
+    const alunoController = new AlunoController(alunoService);
+
+    // Todas as dependencias do pacote curso
+    const cursoRepository = new CursoRepository(this.database);
+    const cursoService = new CursoService(cursoRepository);
+    const cursoController = new CursoController(cursoService);
+
+    // Todas as dependencias do pacote instrutor
+    const instrutorRepository = new InstrutorRepository(this.database);
+    const instrutorService = new InstrutorService(instrutorRepository);
+    const instrutorController = new InstrutorController(instrutorService);
+
+    // Todas as dependencias do pacote turma
+    const turmaRepository = new TurmaRepository(this.database);
+    const turmaService = new TurmaService(turmaRepository);
+    const turmaController = new TurmaController(
+      turmaService,
+      cursoService,
+      instrutorService
+    );
+
+    const alunoRouter = new AlunoRouter(alunoController);
+    const cursoRouter = new CursoRouter(cursoController);
+    const instrutorRouter = new InstrutorRouter(instrutorController);
+    const turmaRouter = new TurmaRouter(turmaController);
+
+    this._app.use("/alunos", alunoRouter.getRouter());
+    this._app.use("/cursos", cursoRouter.getRouter());
+    this._app.use("/instrutores", instrutorRouter.getRouter());
+    this._app.use("/turmas", turmaRouter.getRouter());
+>>>>>>> b43d1a9affa2f56a694584a37e22e2b845cb2641
   }
 
   public start() {

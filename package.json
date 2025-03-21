@@ -11,7 +11,10 @@
   "license": "ISC",
   "description": "",
   "devDependencies": {
+<<<<<<< HEAD
     "@types/express": "^5.0.1",
+=======
+>>>>>>> b43d1a9affa2f56a694584a37e22e2b845cb2641
     "@types/node": "^22.10.1",
     "nodemon": "^3.1.7",
     "ts-node": "^10.9.2",
@@ -20,6 +23,10 @@
   "dependencies": {
     "@codeea/scanner": "^1.0.3",
     "@types/cors": "^2.8.17",
+<<<<<<< HEAD
+=======
+    "@types/express": "^5.0.0",
+>>>>>>> b43d1a9affa2f56a694584a37e22e2b845cb2641
     "cors": "^2.8.5",
     "express": "^4.21.2",
     "pg-promise": "^11.10.2"
