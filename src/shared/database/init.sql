@@ -3,11 +3,12 @@ CREATE TYPE appointment_status AS ENUM ('pending', 'confirmed', 'cancelled');
 
 -- Tabela users
 CREATE TABLE users (
-  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
-  name varchar(255),
-  phone varchar(20),
-  email varchar(255)
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(255) NOT NULL,
+  phone VARCHAR(20) NOT NULL,
+  email VARCHAR(255) NOT NULL
 );
+
 
 -- Tabela professionals
 CREATE TABLE professionals (
@@ -31,7 +32,7 @@ CREATE TABLE services (
     hora_fim TIME
 );
 
--- Tabela appointments
+--- Tabela appointments
 CREATE TABLE appointments (
     id UUID PRIMARY KEY,
     service_id UUID REFERENCES services(id) ON DELETE CASCADE,
