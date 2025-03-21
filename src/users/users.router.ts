@@ -4,9 +4,11 @@ import { UsersRepository } from "./users.repository";
 import { Database } from "../shared/database";
 import { UsersController } from "./users.controler";
 
-
 const router = Router();
-const repository = new UsersRepository(Database);
+
+// Correção aqui: criando uma instância de Database
+const database = new Database();
+const repository = new UsersRepository(database);
 const service = new UsersService(repository);
 const controller = new UsersController(service);
 

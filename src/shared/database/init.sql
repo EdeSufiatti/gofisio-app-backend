@@ -3,10 +3,10 @@ CREATE TYPE appointment_status AS ENUM ('pending', 'confirmed', 'cancelled');
 
 -- Tabela users
 CREATE TABLE users (
-    id UUID PRIMARY KEY,
-    name VARCHAR(255) NOT NULL,
-    phone VARCHAR(20),
-    email VARCHAR(255) UNIQUE
+  id uuid PRIMARY KEY DEFAULT gen_random_uuid(),
+  name varchar(255),
+  phone varchar(20),
+  email varchar(255)
 );
 
 -- Tabela professionals
